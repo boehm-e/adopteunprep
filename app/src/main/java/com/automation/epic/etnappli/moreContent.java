@@ -182,8 +182,6 @@ public class moreContent extends AppCompatActivity implements AppBarLayout.OnOff
         String lastname = userCard.getString("lastName");
         JSONArray gradeArray = new JSONArray(userCard.getString("skills"));
 
-        Log.e("desctipiton", "|" + picture + "|");
-
         if (description.isEmpty())
             tvMoreDescription.setText("Aucune information trouvee pour cet utilisateur");
         else
@@ -193,6 +191,8 @@ public class moreContent extends AppCompatActivity implements AppBarLayout.OnOff
         globalGrade.setProgress(generalGrade);
 
         Log.e("userCard", userCard.toString());
+        Log.e("userDetail", userDetail.toString());
+
         JSONArray commments = userDetail.getJSONArray("studentsComments");
 
         arrayComment.clear();
@@ -273,11 +273,6 @@ public class moreContent extends AppCompatActivity implements AppBarLayout.OnOff
                 arc.setLayoutParams(params);
 
                 arcContainer.addView(arc);
-
-                Log.e("SIZE", "SIZE : "+containerGrades.getMeasuredHeight());
-
-
-
             } catch (JSONException e) {
 //                e.printStackTrace();
             }
@@ -309,7 +304,13 @@ public class moreContent extends AppCompatActivity implements AppBarLayout.OnOff
         Log.e("MENU", item.getTitle().toString());
         switch (item.getTitle().toString()) {
             case "linkedin":
-                // do whatever
+                Log.e("LINKEDIN", "LINKEDIN");
+//                Intent i = new Intent(Intent.ACTION_VIEW);
+//                i.setData(Uri.parse());
+//                startActivity(i);
+                return true;
+            case "github":
+                Log.e("GITHUB", "GITHUB");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

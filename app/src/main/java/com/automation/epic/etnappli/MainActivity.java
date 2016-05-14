@@ -86,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-            fillCards();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            fillCards(login, ueName);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -140,7 +140,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         ArrayList<String> finalLoginArray= adapter.getFinalLoginArray();
                         JSONObject group = new JSONObject();
-                        Log.e("YOUR GROUP", finalLoginArray.toString());
+                        JSONArray jsArray = new JSONArray(finalLoginArray);
+                        Log.e("YOUR GROUP", jsArray.toString());
+                        Log.e("ueNAME", ueName.toString());
+                        createGroupIntra(login, ueName, jsArray.toString(),"petite note");
+
                     }
                 });
 
@@ -158,6 +162,43 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void createGroupIntra (final String _username, final String _selectedUsername, final String _ueName, final String _petiteNote) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://ccmobile-etna.cloudapp.net/createGroup";
+        StringRequest postRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
+                new com.android.volley.Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                        Toast.makeText(getApplicationContext(), "TON GROUPE A BIEN ETE CREE SUR L'INTRA", Toast.LENGTH_SHORT);
+                    }
+                },
+                new com.android.volley.Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("username", _username);
+                params.put("ueName", _selectedUsername);
+                params.put("mates", _ueName);
+                params.put("memo", _petiteNote);
+
+                return params;
+            }
+        };
+        queue.add(postRequest);
     }
 
     public void sendMatchRequest(final String _username, final String _selectedUsername, final String _ueName) {
@@ -196,22 +237,56 @@ public class MainActivity extends AppCompatActivity {
         queue.add(postRequest);
     }
 
-    public void fillCards() throws JSONException, IOException {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
+    public void fillCards2(String _username, String _ueName) throws IOException {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("username", _username)
+                .add("ueName", _ueName)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://ccmobile-etna.cloudapp.net/getUsersDispoUE")
+                .post(formBody)
+                .build();
 
-            String url = "http://ccmobile-etna.cloudapp.net/getAllUsersCard";
-            RequestBody formBody = new FormEncodingBuilder()
-                    .build();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            Response response = client.newCall(request).execute();
-         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+        Log.e("ABCDEFGHI", response.body().string());
+    }
 
-            String jsonData = response.body().string();
-            JSONArray jsonArray = new JSONArray(jsonData);
+    public void fillCards(String _username, String _ueName) throws JSONException, IOException {
+//            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//            StrictMode.setThreadPolicy(policy);
+//
+//            String url = "http://ccmobile-etna.cloudapp.net/getAllUsersCard";
+//            RequestBody formBody = new FormEncodingBuilder()
+//                    .build();
+//            Request request = new Request.Builder()
+//                    .url(url)
+//                    .build();
+//
+//            Response response = client.newCall(request).execute();
+//         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("username", _username)
+                .add("ueName", _ueName)
+                .build();
+        Request request = new Request.Builder()
+                .url("http://ccmobile-etna.cloudapp.net/getUsersDispoUE")
+                .post(formBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+        String jsonData = response.body().string();
+        Log.e("RESPONSE ABCDEF", jsonData);
+        JSONArray jsonArray = new JSONArray(jsonData);
 
         //        testData.add(new cardContent("https://intra.etna-alternance.net/report/trombi/image/login/gueye_o", new String[] {"A", "B", "C"}, "gueye_o", "bastien", "chevallier", "description", jsonObj, "15"));
 

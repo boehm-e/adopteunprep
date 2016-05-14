@@ -15,6 +15,20 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listViewProject"></ListView>
+        android:divider="#00000000"
+        android:dividerHeight="10.0sp"
+        android:id="@+id/listViewProject"
+        android:layout_below="@+id/textView6"></ListView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Choisissez votre UE"
+        android:id="@+id/textView6"
+        android:textColor="@color/colorAccent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp" />
 
 </RelativeLayout>

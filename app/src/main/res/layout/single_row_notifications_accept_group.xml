@@ -9,12 +9,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:layout_alignParentEnd="true">
         <ImageView
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:id="@+id/notifPicture"
-            android:layout_gravity="left|center_vertical" />
+            android:layout_gravity="left|center_vertical"
+            android:backgroundTint="#A6CCA6"
+            android:background="#A6CCA6" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/notifUrl"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +37,8 @@
             android:layout_gravity="left|center_vertical"
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/notifPicture"
-            android:text="Login" />
+            android:text="Login"
+            android:backgroundTint="#A6CCA6" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,10 +51,11 @@
             android:layout_gravity="right|center_vertical"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/notifUe"
-            android:text="description" />
+            android:text="vous invite dans son groupe :"
+            android:backgroundTint="#A6CCA6" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="75dp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
@@ -53,7 +65,8 @@
             android:layout_gravity="center"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/notifLogin"
-            android:text="ue" />
+            android:text="ue"
+            android:backgroundTint="#A6CCA6" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,18 +82,18 @@
             android:layout_height="match_parent"
             android:id="@+id/txt_accept"
             android:gravity="center_vertical"
-            android:text="DELETED"
+            android:text="ACCEPT"
             android:clickable="false"
             android:layout_weight="2"
             android:hapticFeedbackEnabled="true"
-            android:textColor="@android:color/white"/>
+            android:textColor="#5cb85c"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:id="@+id/txt_undo"
-            android:text="UNDO"
+            android:id="@+id/txt_refuse"
+            android:text="REFUSE"
             android:clickable="false"
             android:layout_weight="1"
             android:textColor="#d9bf00"/>

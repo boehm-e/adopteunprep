@@ -1,44 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#58A6BD">
 
     <EditText
-        android:layout_width="300dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:id="@+id/tvUsername"
-        android:layout_below="@+id/imageView2"
-        android:layout_alignStart="@+id/tvPassword"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         android:hint="Username"
-        android:layout_marginTop="73dp"
-        android:text="boehm_e" />
-
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/tvPassword"
-        android:layout_below="@+id/tvUsername"
-        android:layout_centerHorizontal="true"
-        android:hint="Password"
-        android:layout_marginTop="35dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log in"
-        android:id="@+id/loginButton"
-        android:layout_marginTop="57dp"
-        android:layout_below="@+id/tvPassword"
+        android:layout_marginTop="22dp"
+        android:text="boehm_e"
+        android:layout_below="@+id/imageView2"
         android:layout_centerHorizontal="true" />
 
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+         android:id="@+id/tvPassword"
+        android:hint="Password"
+        android:layout_below="@+id/tvUsername"
+        android:layout_alignStart="@+id/tvUsername"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:layout_marginTop="25dp" />
+
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:shadowRadius="5"
+        android:elevation="5dp"
+        android:text="Log in"
+        android:id="@+id/loginButton"
+        android:layout_marginTop="25dp"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/tvPassword"
+        android:background="#1E7586"
+        android:layout_alignEnd="@+id/tvPassword"
+        android:layout_alignStart="@+id/tvPassword" />
+
     <ImageView
-        android:layout_width="250dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
         android:id="@+id/imageView2"
-        android:src="@drawable/etna_logo"
+        android:src="@drawable/prepetna"
+        android:layout_marginTop="66dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="&quot; L&apos;application de creation de groupe par affinite &quot;"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp" />
+        android:layout_marginBottom="62dp" />
 </RelativeLayout>

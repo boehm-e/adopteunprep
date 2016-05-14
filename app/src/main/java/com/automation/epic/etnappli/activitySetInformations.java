@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -63,12 +64,12 @@ public class activitySetInformations extends AppCompatActivity {
         Intent intent = getIntent();
         login = intent.getStringExtra("username");
 
-        Button addCompetance = (Button) findViewById(R.id.addCompetances);
+        ImageButton addCompetance = (ImageButton) findViewById(R.id.addCompetances);
 
-        Button validateDescription = (Button) findViewById(R.id.validateDescription);
-        Button validateLinkedin = (Button) findViewById(R.id.validateLinkedin);
-        Button validateGithub = (Button) findViewById(R.id.validateGithub);
-        Button validateCompetances = (Button) findViewById(R.id.validateCompetances);
+        ImageButton validateDescription = (ImageButton) findViewById(R.id.validateDescription);
+        ImageButton validateLinkedin = (ImageButton) findViewById(R.id.validateLinkedin);
+        ImageButton validateGithub = (ImageButton) findViewById(R.id.validateGithub);
+        ImageButton validateCompetances = (ImageButton) findViewById(R.id.validateCompetances);
 
         textDescription = (EditText) findViewById(R.id.textDescription);
         textLinkedin = (EditText) findViewById(R.id.textLinkedin);
@@ -91,7 +92,9 @@ public class activitySetInformations extends AppCompatActivity {
                     JSONObject currentObj = new JSONObject();
 
                     try {
-                        if(competance.getText().toString() != "" && grade.getText().toString() != "") {
+                        Log.e("COMPETANCES COMP", competance.getText().toString());
+                        Log.e("COMPETANCES GRAD", grade.getText().toString());
+                        if(competance.getText().toString() != "" && grade.getText().toString() != "" && grade.getText() != null && competance.getText() != null) {
                             JSONObject obj = new JSONObject();
                             obj.put("name", competance.getText().toString());
                             obj.put("grade", grade.getText().toString());

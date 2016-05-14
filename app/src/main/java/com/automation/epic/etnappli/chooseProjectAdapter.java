@@ -93,7 +93,7 @@ public class chooseProjectAdapter extends BaseAdapter{
 
                 Intent showCards = new Intent(context, MainActivity.class);
                 showCards.putExtra("login", username);
-                showCards.putExtra("ueName", chooseProjectTitle.get(position));
+                showCards.putExtra("ueName", chooseProjectCategory.get(position));
                 Log.e("CHOOSEPROJECTADAPTER", "CHOOSEPROJECT : "+username);
                 context.startActivity(showCards);
 

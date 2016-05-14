@@ -12,6 +12,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.hudomju.swipe.SwipeToDismissTouchListener;
 import com.hudomju.swipe.adapter.ListViewAdapter;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -24,6 +30,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by root on 12/05/16.
@@ -35,10 +43,17 @@ public class activityNotifications extends AppCompatActivity {
     private ListView listView;
     public ProgressBar notifLoading;
 
-    public ArrayList<String> arrayName = new ArrayList<String>();
     public ArrayList<String> notificationsTitle = new ArrayList<String>();
+
+    public ArrayList<String> arrayName = new ArrayList<String>();
     public ArrayList<String> arrayType = new ArrayList<String>();
     public ArrayList<String> arrayUe = new ArrayList<String>();
+
+    public ArrayList<String> arrayUrl= new ArrayList<String>();
+    public ArrayList<String> arrayLeader = new ArrayList<String>();
+    public ArrayList<String> arrayMemo = new ArrayList<String>();
+
+
 
 
     @Override
@@ -88,6 +103,7 @@ public class activityNotifications extends AppCompatActivity {
         JSONArray userIsSelected = obj.getJSONArray("userIsSelected");           // MY PROFILE IS MATCHED BY PEOPLE
         JSONArray commonMatches = obj.getJSONArray("commonMatches");             // CLEAR ENOUGH
         JSONArray userSelectMatches = obj.getJSONArray("userSelectMatches");     // I HAVE MATCH THIS USERS
+        JSONArray groupPropositions = obj.getJSONArray("groupPropositions");     // I HAVE MATCH THIS USERS
 
         Log.e("userISSELECTED", userIsSelected.toString());
 
@@ -100,6 +116,9 @@ public class activityNotifications extends AppCompatActivity {
                     arrayName.add(loginArray.getString(j));
                     arrayType.add("t'as matche");
                     arrayUe.add(ueName);
+                    arrayUrl.add("");
+                    arrayLeader.add("");
+                    arrayMemo.add("");
                 }
 
             } catch (JSONException e) {
@@ -115,22 +134,30 @@ public class activityNotifications extends AppCompatActivity {
                     arrayName.add(loginArray.getString(j));
                     arrayType.add(" et vous vous etes matche mutuellement");
                     arrayUe.add(ueName);
+                    arrayUrl.add("");
+                    arrayLeader.add("");
+                    arrayMemo.add("");
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        for (int i=0; i < userSelectMatches.length(); i++) {
+        for (int i=0; i < groupPropositions.length(); i++) {
+            Log.e("GROUP PROPOSITION", "PROPOSITION");
             try {
-                JSONObject loginObject = userSelectMatches.getJSONObject(i);
-                JSONArray loginArray = loginObject.getJSONArray("usernames");
-                String ueName = loginObject.getString("name");
-                for (int j=0; j<loginArray.length(); j++) {
-                    arrayName.add(loginArray.getString(j));
-                    arrayType.add("est un user que tu as match");
-                    arrayUe.add(ueName);
-                }
+                JSONObject loginObject = groupPropositions.getJSONObject(i);
+                String loginName = loginObject.getString("name");
+                String loginUrl = loginObject.getString("url");
+                String loginLeader = loginObject.getString("leader");
+                String loginMemo = loginObject.getString("memo");
+
+                arrayName.add(loginName);
+                arrayType.add("");
+                arrayUe.add("");
+                arrayUrl.add(loginUrl);
+                arrayLeader.add(loginLeader);
+                arrayMemo.add(loginMemo);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -138,16 +165,20 @@ public class activityNotifications extends AppCompatActivity {
         }
 
 
-        Log.e("FINALLLLLLL", arrayName.toString());
-        Log.e("FINALLLLLLL", arrayType.toString());
-        Log.e("FINALLLLLLL", arrayUe.toString());
 
+        Log.e("SIZE", arrayName.size()+"");
+        Log.e("SIZE", arrayType.size()+"");
+        Log.e("SIZE", arrayUe.size()+"");
+        Log.e("SIZE", arrayUrl.size()+"");
+        Log.e("SIZE", arrayLeader.size()+"");
+        Log.e("SIZE", arrayMemo.size()+"");
     }
 
 
 
     public void initListView() {
-        final NotificationsAdapter adapter = new NotificationsAdapter(activityNotifications.this, arrayName, arrayUe, arrayType);
+        final NotificationsAdapter adapter = new NotificationsAdapter(activityNotifications.this, arrayName, arrayUe, arrayType, arrayUrl, arrayLeader, arrayMemo);
+
         listView.setAdapter(adapter);
         final SwipeToDismissTouchListener<ListViewAdapter> touchListener =
                 new SwipeToDismissTouchListener<>(
@@ -161,13 +192,11 @@ public class activityNotifications extends AppCompatActivity {
                             @Override
                             public void onDismiss(ListViewAdapter view, int position) {
                                 adapter.remove(position);
+                                removeNotif(login, adapter.getUeName(position), adapter.getPerpetrator(position));
                             }
                         });
 
-//        touchListener.setDismissDelay(TIME_TO_AUTOMATICALLY_DISMISS_ITEM);
         listView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
         listView.setOnScrollListener((AbsListView.OnScrollListener) touchListener.makeScrollListener());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -180,6 +209,32 @@ public class activityNotifications extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void removeNotif(final String _username, final String _ueName, final String _perpetrator) {
+        RequestQueue requestLogin = Volley.newRequestQueue(this);
+        String url = "http://ccmobile-etna.cloudapp.net/login";
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e("RESPONSE", response);
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("username", _username);
+                MyData.put("ueName", _ueName);
+                MyData.put("perpetrator", _perpetrator);
+                return MyData;
+            }
+        };
+
+        requestLogin.add(MyStringRequest);
     }
 
     @Override

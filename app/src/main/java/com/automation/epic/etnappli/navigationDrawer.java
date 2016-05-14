@@ -1,6 +1,11 @@
 package com.automation.epic.etnappli;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,13 +33,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class navigationDrawer extends AppCompatActivity
@@ -44,6 +55,8 @@ public class navigationDrawer extends AppCompatActivity
     public ListView listViewChooseProject = null;
     public String login;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,20 +68,11 @@ public class navigationDrawer extends AppCompatActivity
         login = intent.getStringExtra("login");
         Log.e("LOGIN", "NAVDRAWER : " + login);
 
+
         listViewChooseProject = (ListView) findViewById(R.id.listViewProject);
 
         fillProjects();
 
-
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -77,6 +81,15 @@ public class navigationDrawer extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        TextView navMail = (TextView) header.findViewById(R.id.navMail);
+        TextView navLogin= (TextView) header.findViewById(R.id.navLogin);
+
+        navMail.setText(login+"@etna-alternance.net");
+        navLogin.setText(login);
+
+        Picasso.with(getApplicationContext()).load("https://intra.etna-alternance.net/report/trombi/image/login/"+login).into((ImageView) header.findViewById(R.id.imageViewHeader));
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -177,10 +190,89 @@ public class navigationDrawer extends AppCompatActivity
             Intent showMore = new Intent(navigationDrawer.this, activityNotifications.class);
             showMore.putExtra("login", login);
             startActivity(showMore);
+        }else if (id == R.id.share_facebook) {
+            String url = "https://drive.google.com/file/d/0B5SdMY_E9YBJWm5TYzlsU0sxRGs/view?usp=sharing";
+            shareFacebook(url);
+        }else if (id == R.id.share_twitter) {
+            String url = "https://drive.google.com/file/d/0B5SdMY_E9YBJWm5TYzlsU0sxRGs/view?usp=sharing";
+            shareTwitter(url);
+        }else if (id == R.id.share_gmail) {
+            String url = "https://drive.google.com/file/d/0B5SdMY_E9YBJWm5TYzlsU0sxRGs/view?usp=sharing";
+            shareGmail(url);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private void shareGmail(String url) {
+
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "test1");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
+        shareIntent.putExtra(Intent.EXTRA_ORIGINATING_URI, url);
+
+        PackageManager pm = getApplicationContext().getPackageManager();
+        List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+        for (final ResolveInfo app : activityList) {
+            if ((app.activityInfo.name).contains("android.gm")) {
+                final ActivityInfo activity = app.activityInfo;
+                final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+                shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                shareIntent.setComponent(name);
+                startActivity(shareIntent);
+                break;
+            }
+        }
+    }
+
+    private void shareTwitter(String url) {
+
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "test1");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
+        shareIntent.putExtra(Intent.EXTRA_ORIGINATING_URI, url);
+
+        PackageManager pm = getApplicationContext().getPackageManager();
+        List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+        for (final ResolveInfo app : activityList) {
+            if ((app.activityInfo.name).contains("twitter")) {
+                final ActivityInfo activity = app.activityInfo;
+                final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+                shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                shareIntent.setComponent(name);
+                startActivity(shareIntent);
+                break;
+            }
+        }
+    }
+
+    private void shareFacebook(String url) {
+
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "test1");
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, url);
+        shareIntent.putExtra(Intent.EXTRA_ORIGINATING_URI, url);
+
+        PackageManager pm = getApplicationContext().getPackageManager();
+        List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+        for (final ResolveInfo app : activityList) {
+            if ((app.activityInfo.name).contains("facebook")) {
+                final ActivityInfo activity = app.activityInfo;
+                final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+                shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                shareIntent.setComponent(name);
+                startActivity(shareIntent);
+                break;
+            }
+        }
     }
 }
